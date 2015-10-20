@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>{{ title }}</title>
+    <script>
+        function open_websocket() {
+            function show_message(message) {
+                var el = document.createElement('div');
+                el.innerHTML = message;
+                document.body.appendChild(el);
+            }
+
+            var ws = new WebSocket("ws://127.0.0.1:8888/track"); <!-- call MessageHandler -->
+            ws.onopen = function() {
+                show_message('Connected.');
+            };
+            ws.onmessage = function(event) {
+                show_message(event.data);
+            };
+            ws.onclose = function() {
+                show_message("Closed.");
+            };
+        }
+    </script>
+</head>
+
+<body onload="open_websocket()">
+    <h1>{{ title }}</h1>
+    <p>Enter your message and press the 'Send' button. You may open another browser window and send messages from here.</p>
+    <form method="POST" action="/msg" target="_hidden">
+        <!-- call NewMessageHandler -->
+        <input name="message" style="width: 500px;border: 1px solid #CCC;padding: 3px;" value="" placeholder="Enter your message here and press the 'Send' button.">
+        <input type="submit" value="Post">
+    </form>
+    <iframe id="_hidden" name="_hidden" style="display:none"></iframe>
+    <!-- iframe 必须同时加 id 和 name 才能阻止窗口弹出 -->
+    <h2 style="text-align: center; color: rgb(15, 13, 129); text-indent: 0px; background: linear-gradient(155deg, rgb(217, 145, 145) 41%, rgb(222, 213, 213) 80%);">Messages</h2>
+    <hr>
+
+
+</body>
+
+</html>
